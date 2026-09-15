@@ -1,0 +1,16 @@
+# Render Blueprint: one web service hosts the website, the privacy policy and the Anchor Relay API.
+# Deploy: Render dashboard → New → Blueprint → pick this GitHub repo.
+services:
+  - type: web
+    name: anchor-relay
+    runtime: python
+    plan: free
+    buildCommand: pip install -r server/requirements.txt
+    startCommand: python server/anchor_relay.py
+    healthCheckPath: /v1/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      # Optional: enables the Claude-written weekly digest. Set it in the Render dashboard.
+      - key: ANTHROPIC_API_KEY
+        sync: false

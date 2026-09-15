@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Anchor · Privacy Policy</title>
+<style>
+  :root{--dark:#1F3B3F;--primary:#3B6E71;--text:#1F2937;--muted:#6B7280;--card:#F3F7F6;--line:#E1E8E6;--goodbg:#EAF2EE}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text);background:#fff;line-height:1.6}
+  header{background:var(--dark);color:#fff;padding:20px}
+  header a{color:#fff;text-decoration:none;font-weight:800;letter-spacing:2px}
+  main{max-width:780px;margin:0 auto;padding:32px 20px 64px}
+  h1{font-size:32px;margin:0 0 4px}
+  h2{font-size:20px;margin:32px 0 8px;color:var(--dark)}
+  .muted{color:var(--muted);font-size:14px}
+  .box{background:var(--goodbg);border-radius:14px;padding:16px 18px;margin:18px 0}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:var(--card)}
+  .scroll{overflow-x:auto}
+  a{color:var(--primary)}
+</style>
+</head>
+<body>
+<header><a href="/">⚓ ANCHOR</a></header>
+<main>
+  <h1>Privacy Policy</h1>
+  <p class="muted">Effective 16 September 2026 · Applies to the Anchor Android app (package <code>com.anchor.copilot</code>) and the Anchor Relay service</p>
+
+  <div class="box">
+    <b>In one paragraph:</b> Anchor is a consent-based family wellbeing app. On a child's phone it records check-ins the child chooses to make and a summary of app usage time, and shares them only with the family members the child connected with. Anchor never reads messages, photos, keystrokes or screen contents; the camera is a live mirror that is never recorded, analyzed or uploaded; private journal notes stay on the phone unless the child shares them. There are no ads, no analytics SDKs, and no sale of data.
+  </div>
+
+  <h2>1. Who Anchor is for</h2>
+  <p>Anchor is designed for families: a parent or caregiver, a child (roughly ages 5–12), and optionally an older sibling or mentor ("Gen Z guide"). A child's device is connected only after the family sets it up together and the child agrees on the consent screens. Anchor is not intended for monitoring adults, partners or employees, and must not be used covertly.</p>
+
+  <h2>2. Data Anchor processes</h2>
+  <div class="scroll">
+  <table>
+    <tr><th>Data</th><th>Where it's processed</th><th>Shared with family?</th></tr>
+    <tr><td>Vibe Check mood emoji (1–5) and derived tone label</td><td>Child's device</td><td>Yes, if "Mood check-ins" is on</td></tr>
+    <tr><td>Journal note text</td><td>Child's device only; tone is analyzed on-device</td><td>Only if the child ticks "Share this note"</td></tr>
+    <tr><td>Camera preview during a Vibe Check</td><td>Displayed on screen only</td><td>Never. Not recorded, analyzed, stored or uploaded</td></tr>
+    <tr><td>Transition Check emoji, reaction time, app name and session length</td><td>Child's device</td><td>Yes, if "Transition checks" is on</td></tr>
+    <tr><td>App usage summary: minutes per app/category, late-night and meal-time minutes, unlock count</td><td>Computed on the child's device from Android Usage Access</td><td>Yes, if "Screen-time summary" is on (app names only if "App names" is on)</td></tr>
+    <tr><td>"Something bothered me" reports, shared links, Anchor Time sessions</td><td>Child's device</td><td>Yes, only when the child sends them</td></tr>
+    <tr><td>Family goals, kind words, names chosen at setup</td><td>Family devices</td><td>Yes, within the family</td></tr>
+  </table>
+  </div>
+  <p>Anchor does <b>not</b> collect location, contacts, messages, photos, browsing history, audio, precise device identifiers or advertising IDs.</p>
+
+  <h2>3. How data moves</h2>
+  <p>In <b>demo mode</b>, everything stays on the one phone. In a <b>connected family</b>, the devices exchange events through Anchor Relay, a small server that stores the family's event log so each member's app can sync. Access requires a secret token issued when a device joins with the family code. Tokens are stored hashed.</p>
+  <p><b>AI digest (optional):</b> when a parent taps "Write this week's digest with AI", the parent's app sends only aggregated numbers (e.g. check-in count, average mood, number of tough transitions, category percentages and pattern titles) to Anchor Relay, which asks Anthropic's Claude API to write a short summary. No names, journal text, app-level detail or media are sent. Anthropic processes this request under its commercial terms.</p>
+
+  <h2>4. Permissions</h2>
+  <ul>
+    <li><b>Usage access</b>: to count minutes per app and notice when a session ends. Granted by the family in Android Settings.</li>
+    <li><b>Notifications</b>: for the persistent "Anchor is on" notice and one-tap Transition Checks.</li>
+    <li><b>Camera</b>: only while the child has turned on the Vibe Check mirror.</li>
+    <li><b>Foreground service</b>: keeps the disclosure notification visible on the child's phone while Anchor is active.</li>
+  </ul>
+
+  <h2>5. The child's controls</h2>
+  <p>On the "What my family can see" screen the child can see exactly what is shared, turn each type of sharing on or off, or pause all sharing. Family members are shown when sharing changes. Nothing is hidden from the child, and the app icon and notification are always visible.</p>
+
+  <h2>6. Retention and deletion</h2>
+  <p>On-device data is deleted when the app is uninstalled or when "Leave demo" / "Disconnect &amp; reset" is used. The relay keeps a rolling log (most recent events per family, one screen-time summary per day). To delete a family's relay data, contact us with the family code and we'll erase it. Hosting providers may keep short-lived operational logs that do not include event contents.</p>
+
+  <h2>7. Children's privacy</h2>
+  <p>Anchor is built around verifiable parental involvement: a parent creates the family and sets up the child's device together with the child. We collect the minimum needed for the features above, use it only to provide those features to the family, never for advertising, and never sell or rent it. Parents can review what is shared at any time in the parent app and request deletion.</p>
+
+  <h2>8. Not a medical service</h2>
+  <p>Anchor highlights patterns to prompt family conversations. It does not diagnose, treat or prevent any condition. If you're worried about a child's safety or wellbeing, contact a qualified professional or a local helpline (in India, CHILDLINE 1098; in the US, 988).</p>
+
+  <h2>9. Security</h2>
+  <p>Transport should use HTTPS in production (the hosted relay does). Family tokens are random 256-bit secrets stored as SHA-256 hashes. Local app data is excluded from cloud backup.</p>
+
+  <h2>10. Changes and contact</h2>
+  <p>We'll update this page when practices change and note the effective date above. Questions or deletion requests: <b>[add your contact email here before publishing on Google Play]</b>, or open an issue on the project's <a href="https://github.com/theLeverager1705/Anchor-Consent-Based-Digital-Wellbeing-Co-Pilot-for-GenAlpha">GitHub repository</a>.</p>
+</main>
+</body>
+</html>

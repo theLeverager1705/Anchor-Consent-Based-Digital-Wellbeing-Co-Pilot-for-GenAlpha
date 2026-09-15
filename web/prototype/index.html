@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Anchor — Family Digital Wellbeing Co-Pilot (Prototype)</title>
+<style>
+  :root{
+    --dark:#1F3B3F; --dark2:#2B4E52; --primary:#3B6E71; --secondary:#84B59F;
+    --accent:#E76F51; --text:#1F2937; --muted:#6B7280; --card:#F3F7F6;
+    --line:#E1E8E6; --good:#2E7D5B; --goodbg:#EAF2EE; --warnbg:#FCEEE9;
+    --white:#FFFFFF; --radius:16px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Calibri,Arial,sans-serif;
+    background:var(--white); color:var(--text);
+  }
+  header.topbar{
+    background:var(--dark); color:var(--white); padding:14px 20px;
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+  header.topbar .brand{ display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:1px; font-size:15px;}
+  header.topbar .brand .dot{ width:30px;height:30px;border-radius:50%;background:var(--secondary); display:flex;align-items:center;justify-content:center;font-size:16px;}
+  .tabs{ display:flex; gap:6px; background:var(--dark2); padding:4px; border-radius:12px; }
+  .tabs button{
+    border:none; background:transparent; color:#CFE3E1; padding:8px 16px; border-radius:9px;
+    cursor:pointer; font-weight:600; font-size:14px;
+  }
+  .tabs button.active{ background:var(--secondary); color:var(--dark); }
+  main{ max-width:1080px; margin:0 auto; padding:22px 18px 60px; }
+  .hidden{ display:none !important; }
+  .banner{
+    background:var(--goodbg); border-radius:var(--radius); padding:14px 18px; margin-bottom:20px;
+    display:flex; align-items:flex-start; gap:12px; font-size:14px; color:var(--text);
+  }
+  .banner b{ color:var(--good); }
+  .banner a.linklike{ color:var(--primary); cursor:pointer; text-decoration:underline; font-weight:600;}
+  .grid{ display:grid; gap:18px; }
+  .grid.cols-2{ grid-template-columns:1fr 1fr; }
+  .grid.cols-3{ grid-template-columns:repeat(3,1fr); }
+  @media (max-width:820px){ .grid.cols-2, .grid.cols-3{ grid-template-columns:1fr; } }
+  .card{
+    background:var(--card); border-radius:var(--radius); padding:20px;
+    box-shadow:0 2px 10px rgba(31,41,55,0.06);
+  }
+  .card h3{ margin:0 0 6px; font-size:17px; }
+  .card p.sub{ margin:0 0 14px; color:var(--muted); font-size:13px; }
+  .pet-wrap{ display:flex; align-items:center; gap:18px; }
+  .pet-avatar{ width:96px; height:96px; flex-shrink:0; }
+  .streak-badge{
+    display:inline-flex; align-items:center; gap:6px; background:var(--dark); color:var(--white);
+    padding:6px 12px; border-radius:20px; font-size:13px; font-weight:700;
+  }
+  .xpbar-track{ background:var(--line); border-radius:8px; height:10px; overflow:hidden; margin-top:8px; }
+  .xpbar-fill{ background:var(--secondary); height:100%; border-radius:8px; transition:width .4s ease; }
+  button.btn{
+    background:var(--primary); color:var(--white); border:none; padding:11px 18px; border-radius:11px;
+    font-weight:700; font-size:14px; cursor:pointer;
+  }
+  button.btn.accent{ background:var(--accent); }
+  button.btn.ghost{ background:transparent; color:var(--primary); border:2px solid var(--primary); }
+  button.btn:disabled{ opacity:.5; cursor:not-allowed; }
+  button.btn.small{ padding:8px 14px; font-size:13px; }
+  .emoji-row{ display:flex; gap:10px; flex-wrap:wrap; margin:14px 0; }
+  .emoji-btn{
+    font-size:28px; background:var(--white); border:2px solid var(--line); border-radius:14px;
+    width:60px; height:60px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  }
+  .emoji-btn.selected{ border-color:var(--secondary); background:var(--goodbg); transform:scale(1.06); }
+  textarea{
+    width:100%; border:2px solid var(--line); border-radius:12px; padding:12px; font-size:14px;
+    font-family:inherit; resize:vertical; min-height:70px;
+  }
+  .cam-box{
+    position:relative; width:100%; max-width:320px; border-radius:14px; overflow:hidden;
+    background:#000; aspect-ratio:4/3; margin:12px 0;
+  }
+  .cam-box video{ width:100%; height:100%; object-fit:cover; }
+  .rec-dot{
+    position:absolute; top:10px; left:10px; display:flex; align-items:center; gap:6px;
+    background:rgba(0,0,0,.55); color:#fff; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:700;
+  }
+  .rec-dot .r{ width:9px;height:9px;border-radius:50%;background:#ff4d4d; animation:pulse 1.2s infinite; }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(31,59,63,0.55); display:flex; align-items:center;
+    justify-content:center; z-index:50; padding:16px;
+  }
+  .modal{
+    background:var(--white); border-radius:20px; padding:28px; max-width:420px; width:100%;
+    text-align:center; box-shadow:0 20px 60px rgba(0,0,0,.25);
+  }
+  .history-list{ list-style:none; margin:0; padding:0; }
+  .history-list li{
+    display:flex; justify-content:space-between; align-items:center; padding:10px 0;
+    border-bottom:1px solid var(--line); font-size:13.5px;
+  }
+  .history-list li:last-child{ border-bottom:none; }
+  .tag{ font-size:11px; font-weight:700; padding:3px 9px; border-radius:10px; }
+  .tag.happy{ background:var(--goodbg); color:var(--good); }
+  .tag.sad{ background:#E6ECF7; color:#3452A0; }
+  .tag.angry, .tag.anxious{ background:var(--warnbg); color:var(--accent); }
+  .tag.neutral{ background:var(--line); color:var(--muted); }
+  .kicker{ text-transform:uppercase; font-size:11.5px; font-weight:800; letter-spacing:1.5px; color:var(--accent); margin-bottom:4px; }
+  h1.pagetitle{ font-size:26px; margin:2px 0 18px; }
+  .footnote{ font-size:12px; color:var(--muted); margin-top:26px; line-height:1.5; }
+  .alert-card{ border-left:none; }
+  .alert-card.warn{ background:var(--warnbg); }
+  .alert-card.ok{ background:var(--goodbg); }
+  svg.chart{ width:100%; height:auto; display:block; }
+  .legend{ display:flex; gap:16px; font-size:12px; color:var(--muted); margin-top:8px; flex-wrap:wrap; }
+  .legend span{ display:inline-flex; align-items:center; gap:5px; }
+  .legend i{ width:10px;height:10px;border-radius:3px;display:inline-block; }
+  .statrow{ display:flex; gap:14px; flex-wrap:wrap; margin-top:6px; }
+  .stat{ background:var(--white); border-radius:12px; padding:12px 16px; min-width:110px; text-align:center; box-shadow:0 1px 4px rgba(0,0,0,.05);}
+  .stat .n{ font-size:22px; font-weight:800; color:var(--dark); }
+  .stat .l{ font-size:11px; color:var(--muted); margin-top:2px; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand"><span class="dot">🛡️</span> ANCHOR — prototype</div>
+  <div class="tabs">
+    <button id="tab-kid" class="active">Kid Mode</button>
+    <button id="tab-parent">Parent Mode</button>
+  </div>
+</header>
+
+<main>
+  <!-- ============= KID MODE ============= -->
+  <section id="view-kid">
+    <h1 class="pagetitle">Hey there 👋</h1>
+
+    <div class="banner">
+      <div>
+        🔎 <b>What's tracked:</b> only what you choose to share in a Vibe Check or Transition Check. The camera turns on only when you tap it, and never records in the background.
+        <span class="linklike" id="open-consent">See exactly what my parent can see →</span>
+      </div>
+    </div>
+
+    <div class="grid cols-2">
+      <div class="card">
+        <h3>Your Sprout 🌱</h3>
+        <p class="sub">Grows every time you check in — honest days count just as much as good ones.</p>
+        <div class="pet-wrap">
+          <div class="pet-avatar" id="pet-avatar"></div>
+          <div style="flex:1;">
+            <span class="streak-badge">🔥 <span id="streak-count">0</span> day streak</span>
+            <div class="xpbar-track"><div class="xpbar-fill" id="xp-fill" style="width:0%"></div></div>
+            <div style="font-size:12px;color:var(--muted);margin-top:4px;">Stage <span id="stage-num">1</span> of 5 · <span id="checkin-count">0</span> check-ins</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Vibe Check ✨</h3>
+        <p class="sub">Takes about 15 seconds. Pick how you feel, or let the camera help you decide.</p>
+        <button class="btn" id="start-vibe">Start Vibe Check</button>
+      </div>
+    </div>
+
+    <div class="grid cols-2" style="margin-top:18px;">
+      <div class="card">
+        <h3>Transition Check ⏱️</h3>
+        <p class="sub">This simulates what happens right after a screen session ends — no camera or mic involved, just one quick tap.</p>
+        <button class="btn ghost" id="start-transition">Simulate: Screen Turned Off</button>
+        <div id="transition-status" style="margin-top:10px;font-size:13px;color:var(--muted);"></div>
+      </div>
+
+      <div class="card">
+        <h3>Recent Check-Ins</h3>
+        <ul class="history-list" id="history-list">
+          <li style="color:var(--muted);">No check-ins yet today — tap Vibe Check to start your streak.</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="footnote">Prototype note: facial-expression assistance is intentionally kept as a live camera preview here rather than a bundled ML model — you always make the final call on how you feel. The production architecture adds an on-device, child-tuned model as a suggestion layer only (see the Pitch &amp; Roadmap doc).</p>
+  </section>
+
+  <!-- ============= PARENT MODE ============= -->
+  <section id="view-parent" class="hidden">
+    <h1 class="pagetitle">Family Digest</h1>
+
+    <div class="card" id="digest-card" style="margin-bottom:18px;">
+      <div class="kicker">This week</div>
+      <p id="digest-text" style="font-size:15px;line-height:1.5;margin:6px 0 0;"></p>
+    </div>
+
+    <div class="statrow" id="stat-row"></div>
+
+    <div class="grid cols-2" style="margin-top:18px;">
+      <div class="card">
+        <h3>Mood trend — last 20 days</h3>
+        <p class="sub">1 = rough day · 5 = great day. Simulated history + your live check-ins.</p>
+        <svg class="chart" id="mood-chart" viewBox="0 0 560 220"></svg>
+      </div>
+      <div class="card">
+        <h3>Screen-time category mix</h3>
+        <p class="sub">Simulated for this demo — production pulls this from the OS screen-time API.</p>
+        <svg class="chart" id="cat-chart" viewBox="0 0 560 220"></svg>
+        <div class="legend" id="cat-legend"></div>
+      </div>
+    </div>
+
+    <div class="grid cols-2" style="margin-top:18px;">
+      <div class="card">
+        <h3>Transition reactions</h3>
+        <p class="sub">How intense the reaction was right after screen-off, last 10 sessions.</p>
+        <svg class="chart" id="trans-chart" viewBox="0 0 560 180"></svg>
+      </div>
+      <div class="card" id="alerts-card">
+        <h3>Worth a conversation?</h3>
+        <div id="alerts-list"></div>
+      </div>
+    </div>
+
+    <p class="footnote">This dashboard never shows raw video, audio, or camera frames — only the derived scores described above. Nothing here is a diagnosis; it's a prompt to start a conversation. See the Research Dossier for why that framing matters.</p>
+  </section>
+</main>
+
+<!-- Consent detail modal -->
+<div class="modal-overlay hidden" id="consent-modal">
+  <div class="modal">
+    <h3 style="margin-top:0;">What your parent can see 🔍</h3>
+    <p style="font-size:14px;color:var(--text);text-align:left;line-height:1.5;">
+      ✅ Your mood emoji and streak<br/>
+      ✅ How long apps were used, by category<br/>
+      ✅ Whether check-ins are happening consistently<br/><br/>
+      🚫 Never your camera video or audio<br/>
+      🚫 Never your private journal text unless you choose to share it<br/>
+      🚫 Never anything while you're not actively checking in
+    </p>
+    <button class="btn" id="close-consent">Got it</button>
+  </div>
+</div>
+
+<!-- Vibe check modal -->
+<div class="modal-overlay hidden" id="vibe-modal">
+  <div class="modal" style="max-width:460px;">
+    <h3 style="margin-top:0;" id="vibe-step-title">How are you feeling right now?</h3>
+
+    <div id="vibe-step-cam">
+      <p style="font-size:13px;color:var(--muted);">Optional: turn on the camera to help you decide. It's only ever on right now, on this screen.</p>
+      <div class="cam-box" id="cam-box">
+        <div class="rec-dot hidden" id="rec-dot"><span class="r"></span> camera on</div>
+        <video id="cam-video" autoplay playsinline muted></video>
+      </div>
+      <button class="btn small ghost" id="enable-cam">Turn on camera</button>
+    </div>
+
+    <div class="emoji-row" id="vibe-emojis"></div>
+
+    <textarea id="vibe-journal" placeholder="Want to say more? (totally optional, private to you)"></textarea>
+
+    <div style="margin-top:16px; display:flex; gap:10px; justify-content:center;">
+      <button class="btn ghost small" id="cancel-vibe">Cancel</button>
+      <button class="btn small" id="save-vibe" disabled>Save Check-In</button>
+    </div>
+  </div>
+</div>
+
+<!-- Transition prompt modal -->
+<div class="modal-overlay hidden" id="transition-modal">
+  <div class="modal">
+    <h3 style="margin-top:0;">Quick check — how do you feel right now?</h3>
+    <p style="font-size:13px;color:var(--muted);">(No camera, no mic — just tap one.)</p>
+    <div class="emoji-row" id="transition-emojis" style="justify-content:center;"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ANCHOR PROTOTYPE — fully self-contained, no external network
+   dependencies. Everything below runs locally in the browser.
+   ============================================================ */
+
+// ---------- tiny on-device sentiment / mood lexicon ----------
+const LEXICON = {
+  happy: ["happy","fun","great","awesome","excited","good","love","yay","cool","proud","best","laugh","glad"],
+  sad: ["sad","cry","lonely","miss","hurt","upset","down","bad","tired","bored","alone"],
+  angry: ["mad","angry","annoyed","hate","stupid","unfair","furious","frustrat"],
+  anxious: ["scared","worried","nervous","afraid","stress","anxious","panic","scary"],
+};
+function analyzeText(text){
+  if(!text || !text.trim()) return null;
+  const words = text.toLowerCase().replace(/[^a-z' ]/g," ").split(/\s+/).filter(Boolean);
+  const scores = { happy:0, sad:0, angry:0, anxious:0 };
+  let negateNext = false;
+  words.forEach(w=>{
+    if(w==="not"||w.endsWith("n't")){ negateNext = true; return; }
+    for(const [cat,list] of Object.entries(LEXICON)){
+      if(list.some(root=>w.startsWith(root))){
+        scores[cat] += negateNext ? -1 : 1;
+      }
+    }
+    negateNext = false;
+  });
+  let top = "neutral", topScore = 0;
+  Object.entries(scores).forEach(([cat,s])=>{ if(s>topScore){ top=cat; topScore=s; } });
+  return { top, scores };
+}
+
+// ---------- app state ----------
+const EMOJI_SCALE = [
+  {e:"😢", v:1, label:"sad"},
+  {e:"😟", v:2, label:"anxious"},
+  {e:"😐", v:3, label:"neutral"},
+  {e:"🙂", v:4, label:"happy"},
+  {e:"😄", v:5, label:"happy"},
+];
+
+const state = {
+  streak: 3,
+  checkins: 4,
+  xp: 42, // 0-100 per stage
+  stage: 2,
+  todayHistory: [
+    { time:"8:12 AM", emoji:"🙂", label:"happy", note:"" },
+    { time:"1:40 PM", emoji:"😐", label:"neutral", note:"school was ok" },
+  ],
+  camStream: null,
+  selectedVibeEmoji: null,
+  moodSeries: [], // {day, value}
+  catSeries: null,
+  transitionSeries: [],
+};
+
+// ---------- seeded simulated history (20 days) ----------
+function seededRandom(seed){ let s = seed; return ()=>{ s = (s*9301+49297)%233280; return s/233280; }; }
+function buildSimulatedHistory(){
+  const rand = seededRandom(20260826);
+  const days = [];
+  let base = 3.4;
+  for(let i=19;i>=0;i--){
+    base += (rand()-0.52)*0.6;
+    base = Math.max(1.4, Math.min(4.8, base));
+    // simulate a dip in the last few days to give the alert engine something real to find
+    if(i<=3) base -= 0.35;
+    days.push({ label: `D-${i}`, value: Math.round(base*10)/10 });
+  }
+  return days;
+}
+function buildSimulatedTransitions(){
+  const rand = seededRandom(773311);
+  const out = [];
+  for(let i=0;i<10;i++){
+    out.push({ label:`S${i+1}`, intensity: Math.round((1+rand()*4)*10)/10 });
+  }
+  return out;
+}
+state.moodSeries = buildSimulatedHistory();
+state.transitionSeries = buildSimulatedTransitions();
+state.catSeries = [
+  { label:"Video / short-form", value:38, color:"#E76F51" },
+  { label:"Games", value:26, color:"#3B6E71" },
+  { label:"Chat / social", value:18, color:"#84B59F" },
+  { label:"Education", value:11, color:"#2E7D5B" },
+  { label:"Other", value:7, color:"#B7C4C2" },
+];
+
+// ---------- tab switching ----------
+const tabKid = document.getElementById("tab-kid");
+const tabParent = document.getElementById("tab-parent");
+const viewKid = document.getElementById("view-kid");
+const viewParent = document.getElementById("view-parent");
+tabKid.onclick = ()=>{ tabKid.classList.add("active"); tabParent.classList.remove("active"); viewKid.classList.remove("hidden"); viewParent.classList.add("hidden"); };
+tabParent.onclick = ()=>{ tabParent.classList.add("active"); tabKid.classList.remove("active"); viewParent.classList.remove("hidden"); viewKid.classList.add("hidden"); renderParent(); };
+
+// ---------- consent modal ----------
+document.getElementById("open-consent").onclick = ()=> document.getElementById("consent-modal").classList.remove("hidden");
+document.getElementById("close-consent").onclick = ()=> document.getElementById("consent-modal").classList.add("hidden");
+
+// ---------- pet rendering ----------
+function renderPet(){
+  const stages = ["🌱","🌿","🪴","🌳","🌸🌳"];
+  document.getElementById("pet-avatar").innerHTML =
+    `<div style="font-size:64px;line-height:1;text-align:center;">${stages[Math.min(state.stage-1,4)]}</div>`;
+  document.getElementById("streak-count").textContent = state.streak;
+  document.getElementById("stage-num").textContent = state.stage;
+  document.getElementById("checkin-count").textContent = state.checkins;
+  document.getElementById("xp-fill").style.width = state.xp + "%";
+}
+function renderHistory(){
+  const list = document.getElementById("history-list");
+  if(state.todayHistory.length===0){
+    list.innerHTML = `<li style="color:var(--muted);">No check-ins yet today.</li>`;
+    return;
+  }
+  list.innerHTML = state.todayHistory.slice().reverse().map(h=>
+    `<li><span>${h.emoji} ${h.time}${h.note ? " — “"+h.note+"”" : ""}</span><span class="tag ${h.label}">${h.label}</span></li>`
+  ).join("");
+}
+renderPet(); renderHistory();
+
+// ---------- Vibe Check flow ----------
+const vibeModal = document.getElementById("vibe-modal");
+const emojiRow = document.getElementById("vibe-emojis");
+EMOJI_SCALE.forEach(item=>{
+  const b = document.createElement("button");
+  b.className = "emoji-btn"; b.textContent = item.e; b.dataset.value = item.v; b.dataset.label = item.label;
+  b.onclick = ()=>{
+    [...emojiRow.children].forEach(c=>c.classList.remove("selected"));
+    b.classList.add("selected");
+    state.selectedVibeEmoji = item;
+    document.getElementById("save-vibe").disabled = false;
+  };
+  emojiRow.appendChild(b);
+});
+
+document.getElementById("start-vibe").onclick = ()=>{
+  state.selectedVibeEmoji = null;
+  document.getElementById("save-vibe").disabled = true;
+  [...emojiRow.children].forEach(c=>c.classList.remove("selected"));
+  document.getElementById("vibe-journal").value = "";
+  vibeModal.classList.remove("hidden");
+};
+document.getElementById("cancel-vibe").onclick = closeVibe;
+function closeVibe(){
+  stopCam();
+  vibeModal.classList.add("hidden");
+}
+async function stopCam(){
+  if(state.camStream){ state.camStream.getTracks().forEach(t=>t.stop()); state.camStream = null; }
+  document.getElementById("rec-dot").classList.add("hidden");
+}
+document.getElementById("enable-cam").onclick = async ()=>{
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({ video:true, audio:false });
+    state.camStream = stream;
+    document.getElementById("cam-video").srcObject = stream;
+    document.getElementById("rec-dot").classList.remove("hidden");
+    document.getElementById("enable-cam").textContent = "Camera on — tap an emoji below";
+    document.getElementById("enable-cam").disabled = true;
+  }catch(err){
+    document.getElementById("enable-cam").textContent = "Camera unavailable — pick an emoji below";
+    document.getElementById("enable-cam").disabled = true;
+  }
+};
+
+document.getElementById("save-vibe").onclick = ()=>{
+  if(!state.selectedVibeEmoji) return;
+  const note = document.getElementById("vibe-journal").value.trim();
+  const sentiment = analyzeText(note);
+  const finalLabel = sentiment ? sentiment.top : state.selectedVibeEmoji.label;
+  const now = new Date();
+  const time = now.toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" });
+  state.todayHistory.push({ time, emoji: state.selectedVibeEmoji.e, label: finalLabel === "neutral" ? state.selectedVibeEmoji.label : finalLabel, note });
+  state.checkins++; state.streak = state.streak; state.xp += 22;
+  if(state.xp >= 100){ state.xp -= 100; state.stage = Math.min(5, state.stage+1); }
+  // feed today's value into the live end of the mood series
+  state.moodSeries.push({ label:"today", value:state.selectedVibeEmoji.v });
+  if(state.moodSeries.length>21) state.moodSeries.shift();
+  renderPet(); renderHistory();
+  closeVibe();
+};
+
+// ---------- Transition Check flow ----------
+const transitionModal = document.getElementById("transition-modal");
+const transEmojiRow = document.getElementById("transition-emojis");
+let transitionShownAt = null;
+EMOJI_SCALE.forEach(item=>{
+  const b = document.createElement("button");
+  b.className = "emoji-btn"; b.textContent = item.e;
+  b.onclick = ()=>{
+    const reactionMs = performance.now() - transitionShownAt;
+    state.transitionSeries.push({ label:"live", intensity: 6 - item.v }); // lower mood = higher "intensity" of withdrawal
+    if(state.transitionSeries.length>11) state.transitionSeries.shift();
+    transitionModal.classList.add("hidden");
+    document.getElementById("transition-status").textContent =
+      `Logged in ${(reactionMs/1000).toFixed(1)}s — thanks for checking in.`;
+  };
+  transEmojiRow.appendChild(b);
+});
+document.getElementById("start-transition").onclick = ()=>{
+  document.getElementById("transition-status").textContent = "Simulating screen-off… prompt will appear in a moment.";
+  setTimeout(()=>{
+    transitionShownAt = performance.now();
+    transitionModal.classList.remove("hidden");
+  }, 1800);
+};
+
+// ================= PARENT MODE RENDERING =================
+function linePath(points, w, h, pad, minV, maxV){
+  const n = points.length;
+  const stepX = (w - pad*2) / (n-1);
+  const scaleY = v => h - pad - ((v-minV)/(maxV-minV))*(h - pad*2);
+  return points.map((p,i)=> `${i===0?"M":"L"} ${pad + i*stepX} ${scaleY(p.value ?? p.intensity)}`).join(" ");
+}
+
+function renderMoodChart(){
+  const svg = document.getElementById("mood-chart");
+  const w=560,h=220,pad=28;
+  const series = state.moodSeries;
+  const path = linePath(series, w, h, pad, 1, 5);
+  let gridlines = "";
+  for(let v=1; v<=5; v++){
+    const y = h - pad - ((v-1)/4)*(h-pad*2);
+    gridlines += `<line x1="${pad}" y1="${y}" x2="${w-pad}" y2="${y}" stroke="#E1E8E6" stroke-width="1"/>
+      <text x="4" y="${y+4}" font-size="9" fill="#6B7280">${v}</text>`;
+  }
+  const last = series[series.length-1];
+  const stepX = (w-pad*2)/(series.length-1);
+  const lastX = pad + (series.length-1)*stepX;
+  const lastY = h - pad - (((last.value)-1)/4)*(h-pad*2);
+  svg.innerHTML = `${gridlines}
+    <path d="${path}" fill="none" stroke="#3B6E71" stroke-width="2.5"/>
+    <circle cx="${lastX}" cy="${lastY}" r="4.5" fill="#E76F51"/>`;
+}
+
+function renderCatChart(){
+  const svg = document.getElementById("cat-chart");
+  const w=560,h=220;
+  const cx=140, cy=110, r=95;
+  let angle = -Math.PI/2;
+  let paths = "";
+  state.catSeries.forEach(seg=>{
+    const frac = seg.value/100;
+    const next = angle + frac*Math.PI*2;
+    const x1 = cx + r*Math.cos(angle), y1 = cy + r*Math.sin(angle);
+    const x2 = cx + r*Math.cos(next), y2 = cy + r*Math.sin(next);
+    const large = frac>0.5 ? 1 : 0;
+    paths += `<path d="M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${large} 1 ${x2},${y2} Z" fill="${seg.color}" />`;
+    angle = next;
+  });
+  svg.innerHTML = paths + `<circle cx="${cx}" cy="${cy}" r="48" fill="#F3F7F6"/>`;
+  document.getElementById("cat-legend").innerHTML = state.catSeries.map(s=>
+    `<span><i style="background:${s.color}"></i>${s.label} — ${s.value}%</span>`).join("");
+}
+
+function renderTransChart(){
+  const svg = document.getElementById("trans-chart");
+  const w=560,h=180,pad=28;
+  const series = state.transitionSeries;
+  const barW = (w-pad*2)/series.length - 8;
+  let bars = "";
+  series.forEach((p,i)=>{
+    const x = pad + i*((w-pad*2)/series.length) + 4;
+    const bh = ((p.intensity)/5)*(h-pad*2);
+    const y = h-pad-bh;
+    const color = p.intensity>=3.5 ? "#E76F51" : "#84B59F";
+    bars += `<rect x="${x}" y="${y}" width="${barW}" height="${bh}" rx="4" fill="${color}"/>`;
+  });
+  svg.innerHTML = bars + `<line x1="${pad}" y1="${h-pad}" x2="${w-pad}" y2="${h-pad}" stroke="#E1E8E6"/>`;
+}
+
+function computeAlerts(){
+  const series = state.moodSeries;
+  const recent = series.slice(-4).map(p=>p.value);
+  const earlier = series.slice(-10,-4).map(p=>p.value);
+  const avg = a => a.reduce((s,v)=>s+v,0)/a.length;
+  const alerts = [];
+  if(recent.length && earlier.length && (avg(earlier)-avg(recent)) > 0.5){
+    alerts.push({
+      type:"warn",
+      title:"A gentle dip over the last few days",
+      body:"Mood check-ins have trended lower than the two weeks before. Not a diagnosis — just a pattern worth a low-key check-in.",
+      starter:"“I noticed the last few days seemed a little harder than usual — want to tell me about it?”",
+    });
+  } else {
+    alerts.push({
+      type:"ok",
+      title:"Nothing unusual this week",
+      body:"Mood and check-in consistency look steady compared to the prior two weeks.",
+      starter:"“You've been really consistent with check-ins this week — anything you're proud of?”",
+    });
+  }
+  const highIntensity = state.transitionSeries.slice(-5).filter(p=>p.intensity>=3.5).length;
+  if(highIntensity>=3){
+    alerts.push({
+      type:"warn",
+      title:"Screen-off transitions look tough lately",
+      body:"Several recent transition checks came back higher-intensity — consistent with the withdrawal-response research in the dossier, not defiance.",
+      starter:"“Endings feel extra hard sometimes right after a screen — want to try a 2-minute warning next time?”",
+    });
+  }
+  const dominant = state.catSeries.slice().sort((a,b)=>b.value-a.value)[0];
+  if(dominant.value>35){
+    alerts.push({
+      type:"warn",
+      title:`${dominant.label} is the biggest slice this week (${dominant.value}%)`,
+      body:"Not inherently bad — just worth knowing before a conversation about balance.",
+      starter:`“I saw ${dominant.label.toLowerCase()} was a big chunk of your week — what's been good about it lately?”`,
+    });
+  }
+  return alerts;
+}
+
+function renderDigest(){
+  const alerts = computeAlerts();
+  const warnCount = alerts.filter(a=>a.type==="warn").length;
+  const text = warnCount===0
+    ? `This week looked steady — ${state.checkins} check-ins logged, mood holding around ${state.moodSeries[state.moodSeries.length-1].value.toFixed(1)}/5. No patterns flagged.`
+    : `${warnCount} pattern${warnCount>1?"s":""} worth a look this week — nothing alarming, just a nudge to start a conversation. See below for a suggested opener.`;
+  document.getElementById("digest-text").textContent = text;
+
+  document.getElementById("stat-row").innerHTML = `
+    <div class="stat"><div class="n">${state.streak}</div><div class="l">day streak</div></div>
+    <div class="stat"><div class="n">${state.checkins}</div><div class="l">check-ins today</div></div>
+    <div class="stat"><div class="n">${state.moodSeries[state.moodSeries.length-1].value.toFixed(1)}</div><div class="l">latest mood /5</div></div>
+    <div class="stat"><div class="n">${warnCount}</div><div class="l">patterns flagged</div></div>
+  `;
+
+  document.getElementById("alerts-list").innerHTML = alerts.map(a=>`
+    <div class="card alert-card ${a.type}" style="margin-bottom:10px;padding:14px;">
+      <div style="font-weight:700;font-size:13.5px;margin-bottom:4px;">${a.type==="warn"?"💬":"✅"} ${a.title}</div>
+      <div style="font-size:12.5px;color:var(--text);margin-bottom:6px;">${a.body}</div>
+      <div style="font-size:12.5px;font-style:italic;color:var(--primary);">Conversation starter: ${a.starter}</div>
+    </div>
+  `).join("");
+}
+
+function renderParent(){
+  renderDigest();
+  renderMoodChart();
+  renderCatChart();
+  renderTransChart();
+}
+renderParent();
+</script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Anchor · Consent-based digital wellbeing co-pilot for Gen Alpha</title>
+<meta name="description" content="Anchor is a two-sided Android app: a check-in kids choose, and a pattern parents can finally see. Not surveillance. Nothing covert, nothing diagnostic." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚓</text></svg>" />
+<style>
+  :root{
+    --dark:#1F3B3F; --dark2:#2B4E52; --primary:#3B6E71; --secondary:#84B59F;
+    --accent:#E76F51; --text:#1F2937; --muted:#6B7280; --card:#F3F7F6;
+    --line:#E1E8E6; --good:#2E7D5B; --goodbg:#EAF2EE; --warnbg:#FCEEE9; --white:#FFFFFF;
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Calibri,Arial,sans-serif;color:var(--text);background:var(--white);line-height:1.55}
+  a{color:inherit}
+  .wrap{max-width:1120px;margin:0 auto;padding-inline:20px}
+  nav{position:sticky;top:0;z-index:10;background:rgba(31,59,63,.96);backdrop-filter:blur(8px)}
+  nav .wrap{display:flex;align-items:center;gap:18px;height:60px}
+  .brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:800;letter-spacing:2px;text-decoration:none}
+  .brand .dot{width:32px;height:32px;border-radius:50%;background:var(--secondary);display:grid;place-items:center;font-size:17px}
+  nav .links{margin-left:auto;display:flex;gap:18px;flex-wrap:wrap}
+  nav .links a{color:#CFE3E1;text-decoration:none;font-size:14px;font-weight:600}
+  nav .links a:hover{color:#fff}
+  @media (max-width:720px){nav .links .opt{display:none}}
+
+  .hero{background:var(--dark);color:#fff;padding-block:72px 88px;overflow:hidden}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+  .kicker{text-transform:uppercase;font-size:12px;font-weight:800;letter-spacing:1.8px;color:var(--accent)}
+  .hero .kicker{color:var(--secondary)}
+  h1{font-size:clamp(34px,5vw,56px);line-height:1.05;margin:10px 0 16px;letter-spacing:-.5px}
+  .hero p.lead{font-size:19px;color:#CFE3E1;max-width:560px;margin:0 0 28px}
+  .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;border:2px solid transparent}
+  .btn.accent{background:var(--accent);color:#fff}
+  .btn.light{background:transparent;color:#fff;border-color:rgba(255,255,255,.35)}
+  .btn.primary{background:var(--primary);color:#fff}
+  .btn.ghost{color:var(--primary);border-color:var(--primary)}
+  .btn:hover{filter:brightness(1.06)}
+  .note{font-size:13px;color:#9FC3BE;margin-top:14px}
+  .phones{position:relative;height:520px}
+  .phone{position:absolute;width:236px;border-radius:30px;border:8px solid #10262A;background:#10262A;box-shadow:0 30px 60px rgba(0,0,0,.35);overflow:hidden}
+  .phone img{display:block;width:100%;height:auto}
+  .phone.back{right:6%;top:0;transform:rotate(5deg)}
+  .phone.front{left:4%;top:48px;transform:rotate(-4deg)}
+  @media (max-width:880px){.hero .wrap{grid-template-columns:1fr}.phones{height:440px;max-width:420px;margin:0 auto;width:100%}.phone{width:200px}}
+
+  section{padding-block:72px}
+  h2{font-size:clamp(26px,3.4vw,38px);line-height:1.15;margin:8px 0 14px;letter-spacing:-.3px}
+  .sub{color:var(--muted);font-size:17px;max-width:720px;margin:0 0 34px}
+  .grid{display:grid;gap:18px}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  @media (max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3,.g2{grid-template-columns:1fr}}
+  @media (max-width:520px){.g4{grid-template-columns:1fr}}
+  .card{background:var(--card);border-radius:var(--radius);padding:22px;box-shadow:0 2px 10px rgba(31,41,55,.05)}
+  .card h3{margin:0 0 6px;font-size:18px}
+  .card p{margin:0;color:var(--text);font-size:15px}
+  .stat .n{font-size:34px;font-weight:800;color:var(--dark);line-height:1.1}
+  .stat .l{font-size:14px;color:var(--muted);margin-top:6px}
+  .src{font-size:12px;color:var(--muted);margin-top:14px}
+
+  .band{background:var(--card)}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media (max-width:900px){.two{grid-template-columns:1fr}}
+  .panel{background:#fff;border-radius:var(--radius);padding:26px;box-shadow:0 2px 12px rgba(31,41,55,.06)}
+  .panel .tag{display:inline-block;font-size:12px;font-weight:800;letter-spacing:1px;padding:4px 10px;border-radius:20px;background:var(--goodbg);color:var(--good);text-transform:uppercase}
+  .panel.parent .tag{background:var(--warnbg);color:var(--accent)}
+  ul.ticks{list-style:none;padding:0;margin:14px 0 0}
+  ul.ticks li{padding:7px 0 7px 30px;position:relative;border-bottom:1px solid var(--line);font-size:15px}
+  ul.ticks li:last-child{border-bottom:none}
+  ul.ticks li::before{content:"✓";position:absolute;left:4px;top:7px;color:var(--good);font-weight:800}
+  ul.ticks.no li::before{content:"✕";color:var(--accent)}
+
+  .shots{display:flex;gap:18px;overflow-x:auto;padding:6px 2px 18px;scroll-snap-type:x mandatory}
+  .shot{flex:0 0 220px;scroll-snap-align:start}
+  .shot .frame{border-radius:26px;border:7px solid var(--dark);overflow:hidden;background:var(--dark)}
+  .shot img{display:block;width:100%;height:auto}
+  .shot p{font-size:14px;color:var(--muted);margin:10px 4px 0;text-align:center}
+
+  .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;counter-reset:step}
+  @media (max-width:900px){.flow{grid-template-columns:1fr 1fr}}
+  @media (max-width:520px){.flow{grid-template-columns:1fr}}
+  .flow .card{position:relative;padding-top:48px}
+  .flow .card::before{counter-increment:step;content:counter(step);position:absolute;top:16px;left:22px;width:26px;height:26px;border-radius:50%;background:var(--dark);color:#fff;font-size:13px;font-weight:800;display:grid;place-items:center}
+
+  .dark{background:var(--dark);color:#fff}
+  .dark .sub{color:#CFE3E1}
+  .dark .card{background:var(--dark2);box-shadow:none}
+  .dark .card p{color:#DCEBE9}
+  table{width:100%;border-collapse:collapse;font-size:15px;background:#fff;border-radius:var(--radius);overflow:hidden}
+  th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:var(--dark);color:#fff;font-size:13px;letter-spacing:.5px}
+  .scroll{overflow-x:auto;border-radius:var(--radius);box-shadow:0 2px 12px rgba(31,41,55,.06)}
+  .pill{display:inline-block;padding:2px 9px;border-radius:10px;font-size:12px;font-weight:700}
+  .pill.real{background:var(--goodbg);color:var(--good)}
+  .pill.sim{background:var(--warnbg);color:var(--accent)}
+  .road{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media (max-width:900px){.road{grid-template-columns:1fr 1fr}}
+  @media (max-width:520px){.road{grid-template-columns:1fr}}
+  .road .card.now{outline:3px solid var(--secondary)}
+  footer{background:#152B2E;color:#9FC3BE;padding-block:36px;font-size:14px}
+  footer .wrap{display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+  footer a{color:#CFE3E1}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="dot">⚓</span>ANCHOR</a>
+    <div class="links">
+      <a class="opt" href="#how">How it works</a>
+      <a class="opt" href="#privacy">Privacy</a>
+      <a href="/prototype/">Web prototype</a>
+      <a href="#download">Get the app</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <div class="kicker">AI Builders Hackathon 2026 · Team Gaya</div>
+      <h1>A check-in kids choose. A pattern parents can finally see.</h1>
+      <p class="lead">Anchor is a consent-based digital wellbeing co-pilot for Gen Alpha families. It's not surveillance: nothing covert, nothing diagnostic, and the child can see everything.</p>
+      <div class="cta">
+        <a class="btn accent" href="#download">⬇ Get the Android app</a>
+        <a class="btn light" href="/prototype/">Try the web prototype →</a>
+      </div>
+      <p class="note">Gen Z, the first generation raised on smartphones, building the tool we wish our families had.</p>
+    </div>
+    <div class="phones" aria-hidden="true">
+      <div class="phone back"><img src="img/parent-digest.png" alt="" loading="eager" /></div>
+      <div class="phone front"><img src="img/kid-home.png" alt="" loading="eager" /></div>
+    </div>
+  </div>
+</header>
+
+<section id="problem">
+  <div class="wrap">
+    <div class="kicker">The problem</div>
+    <h2>Parents can see the symptoms. Nobody can see the pattern.</h2>
+    <p class="sub">A toddler who only eats with a screen on. A meltdown the second a device is taken away. Existing parental-control apps report screen time, not how a child is actually doing.</p>
+    <div class="grid g4">
+      <div class="card stat"><div class="n">40%</div><div class="l">of Gen Alpha kids have used a tablet by age 2</div></div>
+      <div class="card stat"><div class="n">~4 hrs</div><div class="l">daily social media for 2 in 3 kids aged 8–10</div></div>
+      <div class="card stat"><div class="n">13% → 16%</div><div class="l">rise in emotional/behavioral concerns, ages 3–5 (2018–2023)</div></div>
+      <div class="card stat"><div class="n">0</div><div class="l">mainstream apps combining usage data with an honest mood signal</div></div>
+    </div>
+    <p class="src">Sources: Annie E. Casey Foundation; CDC survey data; Jonathan Haidt, <em>The Anxious Generation</em>. Full references in the Research Dossier.</p>
+  </div>
+</section>
+
+<section class="band" id="how">
+  <div class="wrap">
+    <div class="kicker">The solution</div>
+    <h2>Two apps, one honest loop</h2>
+    <p class="sub">One Android app with two experiences. The kid is a first-class user, not a monitoring target. The product only works if kids want to open it.</p>
+    <div class="two">
+      <div class="panel">
+        <span class="tag">Kid Mode</span>
+        <h3 style="margin:12px 0 4px;font-size:22px">A Sprout that grows with honest check-ins, not happy ones</h3>
+        <ul class="ticks">
+          <li><b>Vibe Check:</b> a 15-second emoji check-in with an optional camera <i>mirror</i> that is never analyzed</li>
+          <li><b>Private journal</b> with on-device sentiment. Only shared if the child taps "share"</li>
+          <li><b>Transition Check:</b> one tap ~75 seconds after a screen session ends</li>
+          <li><b>"Something bothered me"</b>: tell family in two taps, no trouble</li>
+          <li><b>Anchor Time</b>: phone-free dinner, homework or outdoor timers</li>
+          <li><b>"What my family can see"</b>: a live mirror of the parent view, plus sharing toggles and a pause button</li>
+        </ul>
+      </div>
+      <div class="panel parent">
+        <span class="tag">Parent Mode</span>
+        <h3 style="margin:12px 0 4px;font-size:22px">Pattern-level visibility, written as a conversation</h3>
+        <ul class="ticks">
+          <li><b>Family Digest</b> with an optional Claude-written summary from aggregated numbers only</li>
+          <li><b>"Worth a conversation?"</b> alerts, each with a conversation starter</li>
+          <li><b>20-day trends:</b> mood, category mix, transition reactions, weekly screen time</li>
+          <li><b>App Lens:</b> what TikTok, Roblox, Snapchat etc. are, age ratings, settings to check <i>together</i></li>
+          <li><b>Family goals</b> the child agrees to. Anchor never blocks apps</li>
+          <li><b>Gen Z guides:</b> older siblings or mentors can join the circle</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="screens">
+  <div class="wrap">
+    <div class="kicker">The Android app</div>
+    <h2>Real screens from the build</h2>
+    <p class="sub">Captured from the Android app running on an emulator in demo mode (sample family data, clearly labelled in-app).</p>
+    <div class="shots">
+      <div class="shot"><div class="frame"><img src="img/kid-home.png" alt="Kid Mode home with Sprout, streak and Vibe Check" loading="lazy" /></div><p>Kid Mode: Sprout &amp; Vibe Check</p></div>
+      <div class="shot"><div class="frame"><img src="img/vibe-check.png" alt="Vibe Check with camera mirror and emoji picker" loading="lazy" /></div><p>Vibe Check</p></div>
+      <div class="shot"><div class="frame"><img src="img/transition.png" alt="One-tap Transition Check" loading="lazy" /></div><p>Transition Check</p></div>
+      <div class="shot"><div class="frame"><img src="img/privacy.png" alt="What your family can see" loading="lazy" /></div><p>What my family can see</p></div>
+      <div class="shot"><div class="frame"><img src="img/parent-digest.png" alt="Parent Family Digest with alerts" loading="lazy" /></div><p>Parent: Family Digest</p></div>
+      <div class="shot"><div class="frame"><img src="img/trends.png" alt="Parent trends charts" loading="lazy" /></div><p>Parent: Trends</p></div>
+      <div class="shot"><div class="frame"><img src="img/app-lens.png" alt="App Lens for TikTok" loading="lazy" /></div><p>App Lens</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="kicker">Why Transition Check</div>
+    <h2>The meltdown when the tablet goes away is a signal, not defiance</h2>
+    <p class="sub">Research on device-removal reactions describes a withdrawal response (dopamine crash, time-blindness, loss of control). Instead of filming a child's face, Anchor measures the <i>moment after</i>, with the child's own tap.</p>
+    <div class="flow">
+      <div class="card"><h3>Session ends</h3><p>Android's Usage Access API notices a long session in a video, game or social app has ended. No screen contents are read.</p></div>
+      <div class="card"><h3>~75 seconds later</h3><p>A gentle notification: "Quick check: how do you feel right now?" No camera, no mic.</p></div>
+      <div class="card"><h3>One tap</h3><p>The child picks an emoji; reaction time and intensity are recorded as derived scores only.</p></div>
+      <div class="card"><h3>A pattern, not a verdict</h3><p>3 of the last 5 tough transitions → "worth a conversation", with a starter like trying a 2-minute warning.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="dark" id="privacy">
+  <div class="wrap">
+    <div class="kicker" style="color:var(--secondary)">The non-negotiables</div>
+    <h2>Privacy &amp; trust by design</h2>
+    <p class="sub">Built to COPPA (2025), BIPA-style and GDPR-K / UK Children's Code principles from day one, and to Google Play's rules for transparent child-monitoring apps.</p>
+    <div class="grid g2">
+      <div class="card">
+        <h3>What Anchor never does</h3>
+        <ul class="ticks no" style="margin-top:6px">
+          <li>Background or covert camera / microphone access</li>
+          <li>Face-reading models or any claim to diagnose a condition</li>
+          <li>Read messages, photos, keystrokes or what's on screen</li>
+          <li>Upload raw video, audio or private journal text</li>
+          <li>Block apps or hide from the child</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>What Anchor always does</h3>
+        <ul class="ticks" style="margin-top:6px">
+          <li>Kid-friendly consent with a press-and-hold "agree together"</li>
+          <li>Persistent "Anchor is on" notification on the child's phone</li>
+          <li>Child-controlled sharing toggles and a visible pause</li>
+          <li>Syncs only derived summaries; AI sees aggregated numbers only</li>
+          <li>Frames every alert as "worth a conversation", with real helplines</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">Honest status</div>
+    <h2>What's real vs. simulated</h2>
+    <p class="sub">Judges should know exactly what they're looking at.</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Capability</th><th>Web prototype</th><th>Android app</th></tr></thead>
+        <tbody>
+          <tr><td>Vibe Check, streak, Sprout growth, lexicon sentiment</td><td><span class="pill real">Real</span></td><td><span class="pill real">Real</span></td></tr>
+          <tr><td>Camera mirror with visible indicator (never analyzed)</td><td><span class="pill real">Real</span></td><td><span class="pill real">Real</span> CameraX preview only</td></tr>
+          <tr><td>Transition Check after screen-off</td><td><span class="pill sim">Simulated</span> button</td><td><span class="pill real">Real</span> detects session end via Usage Access</td></tr>
+          <tr><td>Screen-time category mix</td><td><span class="pill sim">Simulated</span></td><td><span class="pill real">Real</span> Android UsageStatsManager</td></tr>
+          <tr><td>Parent dashboard &amp; alert engine</td><td><span class="pill real">Real</span> on seeded history</td><td><span class="pill real">Real</span> on live + sample data</td></tr>
+          <tr><td>Kid ↔ parent sync across devices</td><td>n/a</td><td><span class="pill real">Real</span> via Anchor Relay (this server)</td></tr>
+          <tr><td>AI-written weekly digest (Claude)</td><td>n/a</td><td><span class="pill real">Real</span> when the relay has an API key</td></tr>
+          <tr><td>Demo family history (20 days)</td><td><span class="pill sim">Seeded</span></td><td><span class="pill sim">Seeded</span> in "Try the demo", labelled</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="download">
+  <div class="wrap">
+    <div class="kicker">Get Anchor</div>
+    <h2>Try it on an Android phone</h2>
+    <p class="sub">Install the APK, tap <b>Try the demo on this phone</b> to switch between Kid and Parent Mode, or set up a real family with a parent phone and a kid phone.</p>
+    <div class="cta">
+      <a class="btn primary" href="/download/anchor.apk">⬇ Download Anchor APK</a>
+      <a class="btn ghost" href="/prototype/">Open the web prototype</a>
+      <a class="btn ghost" href="https://github.com/theLeverager1705/Anchor-Consent-Based-Digital-Wellbeing-Co-Pilot-for-GenAlpha">Source on GitHub</a>
+    </div>
+    <p class="src">Android 8.0+. Sideloading needs "Install unknown apps" allowed for your browser. A Google Play listing is in progress.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">Where this goes</div>
+    <h2>Roadmap</h2>
+    <div class="road">
+      <div class="card"><div class="kicker">Phase 0 · Hackathon</div><h3>Prove the core loop</h3><p>Check-in loop, gamified Sprout, parent dashboard on simulated data.</p></div>
+      <div class="card now"><div class="kicker">Phase 1 · 0–3 months</div><h3>Real signals</h3><p>Real screen-time API + real transition detection (shipped in the Android build), then 20–50 pilot families.</p></div>
+      <div class="card"><div class="kicker">Phase 2 · 3–6 months</div><h3>Clinical grounding</h3><p>NLP journaling, child-psychologist review of alert thresholds, school counselor pilot.</p></div>
+      <div class="card"><div class="kicker">Phase 3 · 6–12 months</div><h3>Trust &amp; evidence</h3><p>Independent evidence review, COPPA/BIPA/GDPR-K audit, broader rollout.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div><b style="color:#fff">⚓ Anchor</b> · Nothing covert. Nothing diagnostic. Everything the child can see.</div>
+    <div><a href="/privacy">Privacy policy</a> · <a href="/prototype/">Prototype</a> · <a href="https://github.com/theLeverager1705/Anchor-Consent-Based-Digital-Wellbeing-Co-Pilot-for-GenAlpha">GitHub</a></div>
+  </div>
+</footer>
+
+</body>
+</html>

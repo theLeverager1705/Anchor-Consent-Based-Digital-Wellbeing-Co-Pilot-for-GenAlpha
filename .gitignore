@@ -1,0 +1,32 @@
+# Android / Gradle
+android/.gradle/
+android/build/
+android/app/build/
+android/.kotlin/
+android/local.properties
+android/captures/
+*.iml
+.idea/
+.kotlin/
+
+# Signing secrets: never commit
+*.jks
+*.keystore
+keystore.properties
+
+# Relay runtime data
+server/data/
+__pycache__/
+*.pyc
+.venv/
+
+# OS / editor
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+*.swp
+.vscode/
+
+# Claude Code local overrides
+.claude/settings.local.json
