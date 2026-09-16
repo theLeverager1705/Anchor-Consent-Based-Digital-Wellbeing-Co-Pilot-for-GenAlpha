@@ -9,7 +9,7 @@ Everything to copy into Play Console. Files: `release/anchor-1.0.0.aab` (upload)
 - **Package:** `com.anchor.copilot`
 - **Category:** Parenting
 - **Contact email:** *(your email)*
-- **Privacy policy:** `https://<your-render-service>.onrender.com/privacy`
+- **Privacy policy:** `https://anchor-relay.onrender.com/privacy`
 
 ### Short description (≤ 80 chars)
 Consent-based family wellbeing: kids check in, parents see patterns, not spying.
@@ -82,7 +82,7 @@ Record a 30-second video: kid onboarding → press-and-hold consent → notifica
 ## Release checklist
 
 1. Put your contact email in `web/privacy.html` → redeploy Render
-2. Rebuild with your Render URL: `./gradlew bundleRelease -PanchorRelayUrl=https://<service>.onrender.com`
+2. Rebuild with your Render URL: `./gradlew bundleRelease -PanchorRelayUrl=https://anchor-relay.onrender.com`
 3. Increase `versionCode` in `android/app/build.gradle.kts` for every upload
 4. Upload AAB to **Internal testing**, add testers' emails, share the opt-in link
 5. Personal developer accounts: run **Closed testing** with ≥ 12 testers for 14 days before applying for production

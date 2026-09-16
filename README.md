@@ -76,8 +76,8 @@ keyPassword=…
 ```
 
 ```bash
-./gradlew bundleRelease -PanchorRelayUrl=https://<your-service>.onrender.com   # AAB for Play
-./gradlew assembleRelease -PanchorRelayUrl=https://<your-service>.onrender.com # APK for sideloading
+./gradlew bundleRelease -PanchorRelayUrl=https://anchor-relay.onrender.com   # AAB for Play
+./gradlew assembleRelease -PanchorRelayUrl=https://anchor-relay.onrender.com # APK for sideloading
 ```
 
 ### Run the relay + website locally
@@ -94,8 +94,8 @@ ANTHROPIC_API_KEY=sk-ant-... python server/anchor_relay.py   # enables the AI di
 1. Push this repo to GitHub.
 2. Render dashboard → **New → Blueprint** → select the repo. `render.yaml` creates the `anchor-relay` web service (Python, free plan).
 3. Optional: in the service's **Environment**, set `ANTHROPIC_API_KEY` to enable the Claude digest.
-4. Your site is live at `https://<service>.onrender.com` (landing page `/`, prototype `/prototype/`, privacy policy `/privacy`, health `/v1/health`).
-5. Rebuild the app with `-PanchorRelayUrl=https://<service>.onrender.com` so new installs point at it (it's also editable in-app under *Server settings*).
+4. Your site is live at `https://anchor-relay.onrender.com` (landing page `/`, prototype `/prototype/`, privacy policy `/privacy`, health `/v1/health`).
+5. Rebuild the app with `-PanchorRelayUrl=https://anchor-relay.onrender.com` so new installs point at it (it's also editable in-app under *Server settings*).
 
 > **Free-plan caveats:** the instance sleeps after ~15 min idle (first request takes ~30–60 s) and the disk is ephemeral, so family data resets on redeploy/restart. For a real pilot, add a Render persistent disk and set `ANCHOR_DATA_DIR`, or move storage to a database.
 
@@ -105,7 +105,7 @@ ANTHROPIC_API_KEY=sk-ant-... python server/anchor_relay.py   # enables the AI di
 2. **Create app** → name *Anchor*, app, free. Package: `com.anchor.copilot`.
 3. Upload `app-release.aab` to **Testing → Internal testing** first (instant, up to 100 testers). *New personal accounts must run a closed test with at least 12 testers for 14 days before production access.*
 4. **App content** declarations:
-   - Privacy policy URL: `https://<service>.onrender.com/privacy` (add your contact email in `web/privacy.html` first)
+   - Privacy policy URL: `https://anchor-relay.onrender.com/privacy` (add your contact email in `web/privacy.html` first)
    - **Target audience:** parents (18+). Because children use the kid experience, answer the Families questions honestly and follow the Families Policy (no ads or ad SDKs; Anchor has none)
    - **Data safety:** collected = app activity (app interactions, in-app usage minutes), user-generated content (check-ins, optional notes shared by the child), app info; shared with family members only; encrypted in transit (HTTPS relay); deletion on request; no data sold; no ads
    - **Permissions:** *Usage access* (core feature: family wellbeing summaries), *foreground service: specialUse* (persistent disclosure + transition check; provide a short video), *camera* (Vibe Check mirror, not stored)
