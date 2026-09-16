@@ -33,8 +33,10 @@ enable Usage access for Anchor.) Have the website open in a browser tab too.
 - **Family Digest**: read the top alert: *"Mira reached out: a stranger contacted me"* with the starter
   *"Thank you for telling me. You're not in trouble."*
 - "Every alert is 'worth a conversation', never a diagnosis, and comes with the sentence to actually say."
-- Tap **✨ Write this week's digest with AI**: "Claude writes it from **aggregated numbers only**: no names, no
-  notes, no app detail." *(Needs the relay's API key. If it's offline, the rule-based digest is already on screen.)*
+- Point at **✨ Write this week's digest with AI**: "That summary is Anchor's own rule-based digest, which works
+  offline. The AI path is built and tested: it sends **aggregated numbers only** (no names, notes or app detail) to
+  Claude via our relay, and switches on the moment an API key is set." *(Only tap the button if a key is configured;
+  otherwise it politely says Claude isn't connected and keeps the built-in digest.)*
 - **Trends** tab: mood over 20 days, category mix, transition reactions, weekly screen time.
 - Tap **TikTok** → **App Lens**: "What it is, the age rating, and settings to check *together*, not behind their back."
 

@@ -49,6 +49,10 @@ class RelayClient(baseUrl: String) {
 
     suspend fun health(): Boolean = runCatching { request("GET", "/v1/health", null, null); true }.getOrDefault(false)
 
+    /** True when the relay has a Claude API key configured. */
+    suspend fun aiEnabled(): Boolean =
+        (AnchorJson.parseToJsonElement(request("GET", "/v1/health", null, null)) as JsonObject)["ai"]?.toString() == "true"
+
     suspend fun createFamily(name: String, role: Role): FamilyCreated =
         AnchorJson.decodeFromString(request("POST", "/v1/families", null, buildJsonObject { put("name", name); put("role", role.name) }))
 

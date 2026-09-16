@@ -69,6 +69,11 @@ fun ParentDigest(state: FamilyState, profile: DeviceProfile, repo: AnchorReposit
     var ai by remember { mutableStateOf<RelayClient.Digest?>(null) }
     var aiLoading by remember { mutableStateOf(false) }
     var aiError by remember { mutableStateOf<String?>(null) }
+    // Ask the relay whether a Claude key is configured, so the button tells the truth up front.
+    var aiConfigured by remember { mutableStateOf<Boolean?>(null) }
+    LaunchedEffect(profile.relayUrl) {
+        aiConfigured = runCatching { RelayClient(profile.relayUrl.ifBlank { com.anchor.copilot.BuildConfig.DEFAULT_RELAY_URL }).aiEnabled() }.getOrNull()
+    }
 
     Column(Modifier.verticalScroll(rememberScrollState()).padding(horizontal = 18.dp, vertical = 22.dp)) {
         PageTitle("Family Digest")
@@ -83,16 +88,27 @@ fun ParentDigest(state: FamilyState, profile: DeviceProfile, repo: AnchorReposit
                 Spacer(Modifier.height(6.dp))
                 Text("✨ Written by ${it.model.ifBlank { "Claude" }} from aggregated numbers only. No names, notes or app details were sent.", fontSize = 11.sp, color = Anchor.Muted)
             }
-            aiError?.let { Text(it, fontSize = 12.sp, color = Anchor.Accent, modifier = Modifier.padding(top = 6.dp)) }
-            Spacer(Modifier.height(12.dp))
-            GhostButton(if (aiLoading) "Writing…" else if (ai == null) "✨ Write this week's digest with AI" else "✨ Rewrite", enabled = !aiLoading && state.consented) {
-                aiLoading = true
-                aiError = null
-                scope.launch {
-                    repo.aiDigest(CoPilot.digestInput(state, alerts))
-                        .onSuccess { ai = it }
-                        .onFailure { aiError = "AI digest unavailable right now (${it.message}). The rule-based digest above still works offline." }
-                    aiLoading = false
+            aiError?.let { Text(it, fontSize = 12.sp, color = Anchor.Muted, modifier = Modifier.padding(top = 6.dp)) }
+            if (aiConfigured == false && ai == null && aiError == null) {
+                Text(
+                    "The summary above is Anchor's own rule-based digest. Claude can write it instead once an API key is set on the relay.",
+                    fontSize = 12.sp, color = Anchor.Muted, modifier = Modifier.padding(top = 6.dp),
+                )
+            }
+            if (aiConfigured != false || ai != null) {
+                Spacer(Modifier.height(12.dp))
+                GhostButton(if (aiLoading) "Writing…" else if (ai == null) "✨ Write this week's digest with AI" else "✨ Rewrite", enabled = !aiLoading && state.consented) {
+                    aiLoading = true
+                    aiError = null
+                    scope.launch {
+                        repo.aiDigest(CoPilot.digestInput(state, alerts))
+                            .onSuccess { ai = it; aiConfigured = true }
+                            .onFailure {
+                                aiConfigured = false
+                                aiError = "Claude isn't connected to this relay yet, so Anchor's own digest above is being used."
+                            }
+                        aiLoading = false
+                    }
                 }
             }
         }
