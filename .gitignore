@@ -9,6 +9,9 @@ android/captures/
 .idea/
 .kotlin/
 
+# Local release outputs (the public APK lives in web/download/)
+release/
+
 # Signing secrets: never commit
 *.jks
 *.keystore

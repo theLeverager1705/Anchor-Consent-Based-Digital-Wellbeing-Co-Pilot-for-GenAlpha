@@ -40,6 +40,7 @@ PAGE_SIZE = 200
 CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"  # no 0/O/1/I
 ROLES = {"CHILD", "PARENT", "GUIDE"}
 AI_MODEL = os.environ.get("ANCHOR_AI_MODEL", "claude-opus-5")
+mimetypes.add_type("application/vnd.android.package-archive", ".apk")
 
 _lock = threading.Lock()
 _rate: dict[str, deque] = defaultdict(deque)
